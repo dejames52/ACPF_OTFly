@@ -686,10 +686,7 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
-if __name__ == "__main__":
-
-    inHUC = sys.argv[1]
-    prjProcFolder = sys.argv[2]
+def main(inHUC, prjProcFolder):
 
     fcounter = 1
 
@@ -738,3 +735,5 @@ if __name__ == "__main__":
     del(inHUC,prjProcFolder,FileGDB,YrList,YrList6,StatFrame,TempFrame,FBedit)
             
             
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
