@@ -689,7 +689,7 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
 if __name__ == "__main__":
 
     inHUC = sys.argv[1]
-    prjFolder = sys.argv[2]
+    prjProcFolder = sys.argv[2]
 
     fcounter = 1
 
@@ -700,47 +700,41 @@ if __name__ == "__main__":
     CDLroot = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_LandUse\US_CDL20"
     LTthresh = 5
 
+    FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    # process the statGDB=1 HUCs in the name processing zone    
-    for row in arcpy.da.SearchCursor(HUC12status, ["HUC8","HUC12"], ''' "HUC12" = '%s' ''' %(inHUC) ):
-        HUC8 = str(row[0])
+    arcpy.AddMessage("---" + FileGDB + " #" + str(fcounter))
 
-        ProcDir = prjFolder + "\\huc" + HUC8
-        FileGDB = ProcDir + "\\acpf" + inHUC + ".gdb"
-
-        arcpy.AddMessage("..." + FileGDB + " #" + str(fcounter))
-
-        env.workspace = FileGDB
-        env.extent = "buf" + inHUC
-            
-        # Years
-        #-----------------------------------------------------------------------------
-        arcpy.AddMessage(arcpy.env.workspace)
-        YrList = arcpy.ListRasters("wsCDL*")
+    env.workspace = FileGDB
+    env.extent = "buf" + inHUC
         
-        YrList.sort()
-        YrList6 = []
-        for year in YrList[-6:]:
-            YrList6.append(year[-2:])
-        
-        if len(YrList) > 6:
-            arcpy.AddMessage("...only the last 6 years will be used for land use assignment: %s" %(YrList6))
-        
-                
-        # Process
-        #-----------------------------------------------------------------------------
-        StatFrame = FileGDB + "\\FieldFrame"
-        TempFrame = FileGDB + "\\TempFrame"
-        FBedit = FileGDB + "\\FB%s" % inHUC
-        
-        mkOutputFrame(FBedit, StatFrame, TempFrame, inHUC, LTthresh)
+    # Years
+    #-----------------------------------------------------------------------------
+    arcpy.AddMessage(arcpy.env.workspace)
+    YrList = arcpy.ListRasters("wsCDL*")
+    
+    YrList.sort()
+    YrList6 = []
+    for year in YrList[-6:]:
+        YrList6.append(year[-2:])
+    
+    if len(YrList) > 6:
+        arcpy.AddMessage("---only the last 6 years will be used for land use assignment: %s" %(YrList6))
+    
             
-        ProcByYear(StatFrame, FileGDB, inHUC, YrList)
+    # Process
+    #-----------------------------------------------------------------------------
+    StatFrame = FileGDB + "\\FieldFrame"
+    TempFrame = FileGDB + "\\TempFrame"
+    FBedit = FileGDB + "\\FB%s" % inHUC
+    
+    mkOutputFrame(FBedit, StatFrame, TempFrame, inHUC, LTthresh)
+        
+    ProcByYear(StatFrame, FileGDB, inHUC, YrList)
+        
+    popSummaries(StatFrame, YrList6, CDL_lkup, LTthresh)
+        
+    mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit)
             
-        popSummaries(StatFrame, YrList6, CDL_lkup, LTthresh)
+    del(inHUC,prjProcFolder,FileGDB,YrList,YrList6,StatFrame,TempFrame,FBedit)
             
-        mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit)
-                
-        del(HUC8,inHUC,ProcDir,FileGDB,YrList,YrList6,StatFrame,TempFrame,FBedit)
-                
-                
+            

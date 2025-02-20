@@ -45,7 +45,6 @@ def ext_gSSURGO(inHUC, ACPFsoilRas, FileGDB):
     return(muRows)
     
     
-
 def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
 
     print("---extract tables")
@@ -91,17 +90,16 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.JoinField_management("SurfTex%s" %(inHUC), "mukey", SurfHorizonTable, "mukey", ["cokey"]) 
     arcpy.JoinField_management("SurfTex%s" %(inHUC), "cokey", SurfTextureTable, "cokey", TexList) 
     arcpy.DeleteField_management("SurfTex%s" %(inHUC), ["Value", "Count", "mukey","gSSURGOversion"]) 
-    arcpy.AddIndex_management("SurfTex%s" %(inHUC), "cokey", "muIdx", "UNIQUE", "NON_ASCENDING")
+    arcpy.AddIndex_management("SurfTex%s" %(inHUC), "cokey", "coIdx", "UNIQUE", "NON_ASCENDING")
     
     del(SurfHorizonTable,SurfTextureTable,TexList)
 
 
     ## ------------- MUAgg  ------------- 
     MUAggTable = ACPFsoilDB + "\\usACPF_MUAggTable"
-    muaggList = ["MUsymbol","MUname","WTDepAprJun","FloodFreq","PondFreq","DrainCls","DrainClsWet","HydroGrp","Hydric","OCprodIdx","OCprodIdxSrc","NCCPIall","RootZnDepth","RootZnAWS","Droughty","PotWetandSoil"]
+    muaggList = ["gSSURGOversion","MUsymbol","MUname","WTDepAprJun","FloodFreq","PondFreq","DrainCls","DrainClsWet","HydroGrp","Hydric","OCprodIdx","OCprodIdxSrc","NCCPIall","RootZnDepth","RootZnAWS","Droughty","PotWetandSoil"]
 
     arcpy.JoinField_management(FileGDB + "\\gSSURGO", "mukey", MUAggTable, "mukey", muaggList)
-    
     
     if arcpy.Exists( muRows):
         arcpy.Delete_management(muRows)
@@ -116,35 +114,28 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
 if __name__ == "__main__":
     
     inHUC = sys.argv[1]
-    prjFolder = sys.argv[2]
+    prjProcFolder = sys.argv[2]
     
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    #acpfDir = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
-    #ACPFsoilRas =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_Soils\US48_gSSURGO2023.tif"
     ACPFsoilRas =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_Soils\US_gSSURGOmosaic.gdb\ua4810m"
-    ACPFsoilDB =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\US_ACPFsoilsTables.gdb"
+    ACPFsoilDB =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_Soils\US_ACPFsoilsTables.gdb"
 
     env.snapRaster = ACPFsoilRas
     
-    fcounter = 1
-    
     # process  
-    for row in arcpy.da.SearchCursor(HUC12status, ["HUC8","HUC12"], ''' "HUC12" = '%s' ''' %(inHUC) ):
-        HUC8 = str(row[0])
 
-        ProcDir = prjFolder + "\\huc" + HUC8
-        FileGDB = ProcDir + "\\acpf" + inHUC + ".gdb"
+    FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-        arcpy.AddMessage("..." + FileGDB + " #" + str(fcounter))
+    arcpy.AddMessage("..." + FileGDB)
 
-        env.workspace = FileGDB
-        env.extent = "buf" + inHUC
+    env.workspace = FileGDB
+    env.extent = "buf" + inHUC
 
-        muRows = ext_gSSURGO(inHUC, ACPFsoilRas, FileGDB)
-                
-        makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB ,inHUC)            
-        
-        env.workspace = ""
-        fcounter += 1
-        
+    muRows = ext_gSSURGO(inHUC, ACPFsoilRas, FileGDB)
+            
+    makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB ,inHUC)            
+    
+    env.workspace = ""
+
+    
 
