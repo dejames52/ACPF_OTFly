@@ -18,14 +18,17 @@ import arcpy
 import subprocess
 import sys, os, shutil
 
+from .acpfOTF1 import main as main1
+from .acpfOTF2a import main as main2a
+
 #arcpy.SetLogHistory(False)
 # Local
 
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
-if __name__ == "__main__":
-    
+
+def main(prjName, inHUC12list):
     prjName = sys.argv[1]
     inHUC12list = list(sys.argv[2].split(','))
     #inHUC12list = inHUC12list.replace(" ", "")
@@ -54,29 +57,11 @@ if __name__ == "__main__":
             ##------------------------------------------------------------------------------
             # Select HUC12 BND, create FGDB, extract FB from Master, build BUF
             arcpy.AddMessage(prjProcFolder)
-            callstr1 = "python D:\\ACPFdevelop\\ACPF_OTFly\\scriptlib\\1_bld_acpfFGDB.py %s %s" %(inHUC,prjName)
-            proc1 = subprocess.run(callstr1, shell=True)
+            main1(inHUC, prjName)
             
-            if proc1.returncode == 0:
-                print('FB OK')
-            else:
-                print('{0} FB failed!'.format(inHUC))
-                sys.exit()
-                
-            del(proc1)
-
             ##------------------------------------------------------------------------------
             # Use BUF to extract 8 years of land use from nationalACPF
-            callstr2 = "python D:\\ACPFdevelop\\ACPF_OTFly\\scriptlib\\2a_getHUC12_CDL_Landuse.py %s %s" %(inHUC,prjProcFolder)
-            proc2 = subprocess.run(callstr2, shell=True)
-            
-            if proc2.returncode == 0:
-                print('LU1 OK')
-            else:
-                print('{0} getLU failed!'.format(inHUC))
-                sys.exit()
-                
-            del(proc2)
+            main2a(inHUC, prjProcFolder)
 
             ##------------------------------------------------------------------------------
             # Use BUF to extract 8 years of land use from nationalACPF
@@ -155,4 +140,7 @@ if __name__ == "__main__":
         sys.exit()
     
     del (arcName, callStrA)
+
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
 
