@@ -90,10 +90,8 @@ def AddCDLByYear(CDLroot, inHUC, YrList):
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
-if __name__ == "__main__":
 
-    inHUC = sys.argv[1]
-    prjProcFolder = sys.argv[2]
+def main(inHUC, prjProcFolder):
 
     # Input data
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
@@ -115,3 +113,5 @@ if __name__ == "__main__":
     env.extent = ""
     del [inHUC, prjProcFolder, FileGDB]
 
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
