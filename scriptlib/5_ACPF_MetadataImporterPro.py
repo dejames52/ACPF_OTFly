@@ -43,14 +43,13 @@ arcpy.CheckOutExtension("Spatial")
 def updMetadata(FGDBList, metaTemp):
 
     # Select & go
-    arcpy.AddMessage(" fgdb: %s" %(FileGDB))
+    #arcpy.AddMessage(" fgdb: %s" %(FileGDB))
     env.workspace = FileGDB
     inHUC = os.path.split(FileGDB)[1][4:16]
     
     ## Field Boundaries 
-    arcpy.AddMessage(" ...boundaries")
+    #arcpy.AddMessage("---Meta boundaries")
     fcList = ['bnd','buf','FB','LU6_','CH_']
-    #fcList = ['buf']
     
     for fc in fcList:
         src_template = md.Metadata(metaTemp + "\\%sMetaTemplate" % fc)
@@ -63,14 +62,13 @@ def updMetadata(FGDBList, metaTemp):
 
     
     # Soils 
-    arcpy.AddMessage(" ...soils")
+    arcpy.AddMessage("---Meta soils")
     src_template = md.Metadata(metaTemp + "\\gSSURGOMetaTemplate")
     tgt_item = md.Metadata('gSSURGO')
     tgt_item.copy(src_template)
     tgt_item.save()
     
     slList = ['SurfHrz','SurfTex','SoilProfile']
-    #slList = []
     
     for sl in slList:
         src_template = md.Metadata(metaTemp + "\\%sMetaTemplate" % sl)
@@ -81,10 +79,9 @@ def updMetadata(FGDBList, metaTemp):
     del [slList, src_template, tgt_item]
 
     # Land Use
-    arcpy.AddMessage(" ...CDL")
+    #arcpy.AddMessage("---Meta land use")
     
     luList = ["2016","2017","2018","2019","2020","2021","2022","2023"]
-    #luList = []
 
     for lu in luList:
         src_template = md.Metadata(metaTemp + "\\wsCDL%sMetaTemplate" % lu)
@@ -93,7 +90,7 @@ def updMetadata(FGDBList, metaTemp):
         tgt_item.save()
         
     del [lu, luList, src_template, tgt_item]
-    #del [luList]
+
     
 
 ##------------------------------------------------------------------------------
@@ -102,31 +99,24 @@ def updMetadata(FGDBList, metaTemp):
 if __name__ == "__main__":
     
     inHUC = sys.argv[1]
-    prjFolder = sys.argv[2]
+    prjProcFolder = sys.argv[2]
 
-    #acpfDir = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"   
     metaTemp = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\Metadata_templates_2023Pro.gdb"
 
-
     sws = r"D:\ArcGISDefaults\scratchACPF"
             
+    FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    for row in arcpy.da.SearchCursor(HUC12status, ["HUC8","HUC12"], ''' "HUC12" = '%s' ''' %(inHUC) ):
-        HUC8 = str(row[0])
+    #arcpy.AddMessage("..." + FileGDB)
 
-        ProcDir = prjFolder + "\\huc" + HUC8
-        FileGDB = ProcDir + "\\acpf" + inHUC + ".gdb"
+    env.workspace = FileGDB
+    env.extent = "buf" + inHUC
+        
+    updMetadata(FileGDB, metaTemp)
 
-        arcpy.AddMessage("..." + FileGDB)
+    arcpy.management.Compact(FileGDB)                        
 
-        env.workspace = FileGDB
-        env.extent = "buf" + inHUC
-            
-        updMetadata(FileGDB, metaTemp)
-
-        arcpy.management.Compact(FileGDB)                        
-
-        env.scratchWorkspace = ""
-        arcpy.Delete_management(os.path.join(sws, "mytemp"))
+    env.scratchWorkspace = ""
+    arcpy.Delete_management(os.path.join(sws, "mytemp"))
     

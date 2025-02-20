@@ -93,9 +93,7 @@ def AddCDLByYear(CDLroot, inHUC, YrList):
 if __name__ == "__main__":
 
     inHUC = sys.argv[1]
-    prjFolder = sys.argv[2]
-
-    fcounter = 1
+    prjProcFolder = sys.argv[2]
 
     # Input data
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
@@ -104,25 +102,16 @@ if __name__ == "__main__":
     # Years
     YrList = ["16","17","18","19","20","21","22","23"]
     
+    FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    # process the statGDB=1 HUCs in the name processing zone    
-    for row in arcpy.da.SearchCursor(HUC12status, ["HUC8","HUC12"], ''' "HUC12" = '%s' ''' %(inHUC) ):
-        HUC8 = str(row[0])
+    arcpy.AddMessage("---" + FileGDB)
 
-        ProcDir = prjFolder + "\\huc" + HUC8
-        FileGDB = ProcDir + "\\acpf" + inHUC + ".gdb"
-
-        arcpy.AddMessage("..." + FileGDB + " #" + str(fcounter))
-
-        env.workspace = FileGDB
-        env.extent = "buf" + inHUC
-        
-        #DeleteCDLByYear(YrDelete)
-        
-        AddCDLByYear(CDLroot, inHUC, YrList)
-        
-        fcounter += 1
-        env.workspace = ""
-        env.extent = ""
-        del [HUC8, inHUC, ProcDir, FileGDB]
+    env.workspace = FileGDB
+    env.extent = "buf" + inHUC
+    
+    AddCDLByYear(CDLroot, inHUC, YrList)
+    
+    env.workspace = ""
+    env.extent = ""
+    del [inHUC, prjProcFolder, FileGDB]
 
