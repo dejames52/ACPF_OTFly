@@ -51,11 +51,10 @@ from arcpy.sa import *
 import collections
 import sys, string, os
 
-arcpy.env.overwriteOutput = True
-arcpy.SetLogHistory(False)
-
 # Set extensions & environments 
 arcpy.CheckOutExtension("Spatial")
+arcpy.env.overwriteOutput = True
+arcpy.SetLogHistory(False)
 
 
 ##--------------------------------------------------------------------------------------
@@ -688,8 +687,6 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
 
 def main(inHUC, prjProcFolder):
 
-    fcounter = 1
-
     # Input data
     #acpfDir = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
     CDL_lkup = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\ACPF_CDLlkup_2023"
@@ -699,7 +696,8 @@ def main(inHUC, prjProcFolder):
 
     FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    arcpy.AddMessage("---" + FileGDB + " #" + str(fcounter))
+    arcpy.AddMessage("")
+    arcpy.AddMessage("Land use 2: " + FileGDB)
 
     env.workspace = FileGDB
     env.extent = "buf" + inHUC
@@ -733,7 +731,9 @@ def main(inHUC, prjProcFolder):
     mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit)
             
     del(inHUC,prjProcFolder,FileGDB,YrList,YrList6,StatFrame,TempFrame,FBedit)
-            
+    env.workspace = ""
+    env.extent = ""    
+    
             
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2])

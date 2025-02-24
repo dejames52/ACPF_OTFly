@@ -49,10 +49,9 @@ from arcpy.sa import *
 
 import sys, string, os, time
 
-env.overwriteOutput = True
-
 # Set extensions & environments
 arcpy.CheckOutExtension("Spatial")
+env.overwriteOutput = True
 
 #----------------------------------------------------------------------------------------------
 # Remove early CDL data to trim to 8 years as core - 7/2024
@@ -76,7 +75,6 @@ def AddCDLByYear(CDLroot, inHUC, YrList):
         theLUras = "wsCDL20" + Yr
  
         arcpy.AddMessage("Extract 20%s by mask" % Yr)
-        #arcpy.AddMessage("")
         env.snapRaster = CDL_Data
         env.extent = "buf" + inHUC
         bufMask = "buf" + inHUC
@@ -102,7 +100,8 @@ def main(inHUC, prjProcFolder):
     
     FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    arcpy.AddMessage("---" + FileGDB)
+    arcpy.AddMessage("")
+    arcpy.AddMessage("Land use: " + FileGDB)
 
     env.workspace = FileGDB
     env.extent = "buf" + inHUC
