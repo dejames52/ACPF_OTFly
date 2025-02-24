@@ -14,12 +14,11 @@
 import arcpy
 from arcpy import env
 from arcpy.sa import *
-arcpy.CheckOutExtension("Spatial")
-
 import sys, os
 
-#
+# Set extensions & environments 
 arcpy.env.overwriteOutput = True
+arcpy.CheckOutExtension("Spatial")
 
 # Local
 
@@ -33,6 +32,7 @@ def ext_gSSURGO(inHUC, ACPFsoilRas, FileGDB):
     
     gSSRUGOByMask = ExtractByMask(ACPFsoilRas, FileGDB + "\\buf" + inHUC)  
     gSSRUGOByMask.save("%s\\gSSURGO" %(FileGDB))
+    
     arcpy.AddField_management(gSSRUGOByMask, "mukey", "text", 30)
     arcpy.CalculateField_management(gSSRUGOByMask, "mukey", '!VALUE!', "PYTHON_9.3")
 
@@ -61,8 +61,6 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.DeleteField_management("SoilProfile%s" %(inHUC), ["Value", "Count","gSSURGOversion"] )
     arcpy.AddIndex_management("SoilProfile%s" %(inHUC), "mukey", "muIdx", "UNIQUE", "NON_ASCENDING")
 
-    del(SoilPROFTable,profileList)
-
     
     ## ------------- Surface Horizon  -------------
     if arcpy.Exists( "SurfHrz%s" % inHUC):
@@ -75,9 +73,7 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.JoinField_management("SurfHrz%s"  %(inHUC), "mukey", SurfHorizonTable, "mukey", HrzList) 
     arcpy.DeleteField_management("SurfHrz%s"  %(inHUC), ["Value", "Count","gSSURGOversion"]) 
     arcpy.AddIndex_management("SurfHrz%s" %(inHUC), ["mukey","cokey"], "muIdx", "UNIQUE", "NON_ASCENDING")
-    
-    del(HrzList)
-    
+      
     
     ## ------------- Surface Texture  ------------- 
     if arcpy.Exists( "SurfTex%s" % inHUC):
@@ -92,29 +88,27 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.DeleteField_management("SurfTex%s" %(inHUC), ["Value", "Count", "mukey","gSSURGOversion"]) 
     arcpy.AddIndex_management("SurfTex%s" %(inHUC), "cokey", "coIdx", "UNIQUE", "NON_ASCENDING")
     
-    del(SurfHorizonTable,SurfTextureTable,TexList)
-
 
     ## ------------- MUAgg  ------------- 
     MUAggTable = ACPFsoilDB + "\\usACPF_MUAggTable"
     muaggList = ["gSSURGOversion","MUsymbol","MUname","WTDepAprJun","FloodFreq","PondFreq","DrainCls","DrainClsWet","HydroGrp","Hydric","OCprodIdx","OCprodIdxSrc","NCCPIall","RootZnDepth","RootZnAWS","Droughty","PotWetandSoil"]
 
     arcpy.JoinField_management(FileGDB + "\\gSSURGO", "mukey", MUAggTable, "mukey", muaggList)
-    
+    #arcpy.AddIndex_management(FileGDB + "\\gSSURGO", "mukey", "muIdx", "UNIQUE", "NON_ASCENDING")
+
+
+    #Cleanup    
     if arcpy.Exists( muRows):
         arcpy.Delete_management(muRows)
     
-    del(MUAggTable,muaggList)
+    del(muaggList,profileList,TexList,HrzList)
 
 
 
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
-
-if __name__ == "__main__":
     
-    inHUC = sys.argv[1]
-    prjProcFolder = sys.argv[2]
+def main(inHUC, prjProcFolder):
     
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
     ACPFsoilRas =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_Soils\US_gSSURGOmosaic.gdb\ua4810m"
@@ -126,16 +120,21 @@ if __name__ == "__main__":
 
     FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    arcpy.AddMessage("..." + FileGDB)
+    arcpy.AddMessage("")
+    arcpy.AddMessage("Soils: " + FileGDB)
 
     env.workspace = FileGDB
     env.extent = "buf" + inHUC
 
     muRows = ext_gSSURGO(inHUC, ACPFsoilRas, FileGDB)
             
-    makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB ,inHUC)            
-    
+    makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB ,inHUC)
+                
+    arcpy.management.Compact(FileGDB)
     env.workspace = ""
+    env.extent = ""
 
-    
+            
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
 

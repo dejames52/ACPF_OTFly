@@ -17,14 +17,14 @@
 #
 # 09/2015 - Add union of FB & BND to create 1,000m buffer aka buf
 
-# Import arcpy module
+#Import 
 import arcpy
 from arcpy import env
-import sys, os, shutil
+import sys, os
 
 arcpy.env.overwriteOutput = True
 
-# Local
+#Local
 
 def makeOutputDir(prjProcFolder, inHUC):
     # create the acpf HUC12 fgdb in the right place -- prjProcFolder
@@ -32,6 +32,7 @@ def makeOutputDir(prjProcFolder, inHUC):
     
     FileGDB = os.path.join(prjProcFolder, "acpf%s.gdb" % inHUC)
                     
+    arcpy.AddMessage("")
     arcpy.AddMessage("Create fileGDB: " + FileGDB)
     arcpy.CreateFileGDB_management(prjProcFolder, "acpf%s.gdb" % inHUC) 
     
@@ -81,12 +82,12 @@ def CreateFBfeatures(inHUC, FileGDB):
 ##------------------------------------------------------------------------------
 
  
-def main(inHUC, prjName):
+def main(inHUC, prjProcFolder):
         
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
     FBsrc =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_HUC2_Fields.gdb\US48_ACPFfieldBoundaries"
-    processingFolder = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
-    prjProcFolder = os.path.join(processingFolder, prjName)
+    #processingFolder = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
+    #prjProcFolder = os.path.join(processingFolder, prjName)
 
 
     FileGDB = makeOutputDir(prjProcFolder, inHUC)
@@ -96,7 +97,8 @@ def main(inHUC, prjName):
 
     CreateFBfeatures(inHUC, FileGDB)
     
-    env.workspace = ''
+    env.workspace = ""
+    env.extent = ""
 
 
 if __name__ == "__main__":

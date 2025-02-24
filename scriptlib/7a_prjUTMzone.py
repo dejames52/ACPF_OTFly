@@ -71,6 +71,8 @@ def fgdbProject(FGDBList, outProjectDir):
         
         #----------------
         # Cleanup
+        #arcpy.management.Compact(outFGDB)
+
         del (FeatureList, RasterList, TableList, outSR)
         env.workspace = ""
             

@@ -10,21 +10,19 @@
 import arcpy
 from arcpy import env
 from arcpy.sa import *
-from subprocess import call
 import sys, string, os, time, shutil
 from datetime import datetime
 
-env.overwriteOutput = True
-
 # Set extensions & environments 
 arcpy.CheckOutExtension("Spatial")
+env.overwriteOutput = True
 
 
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
 
-def fgdbProject(FGDBList, outProjectDir):
+def fgdbProject(FGDBList, acpfHUC12, outProjectDir, prjArchiveFolder):
     # Select & go
     for FileGDB in FGDBList:
         env.workspace = FileGDB
@@ -71,6 +69,11 @@ def fgdbProject(FGDBList, outProjectDir):
         
         #----------------
         # Cleanup
+        arcpy.management.Compact(outFGDB)
+        
+        env.workspace = outProjectDir
+        arcpy.Copy_management(outFGDB,os.path.join(prjArchiveFolder,newFGDB))
+
         del (FeatureList, RasterList, TableList, outSR)
         env.workspace = ""
             
@@ -79,28 +82,25 @@ def fgdbProject(FGDBList, outProjectDir):
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
-if __name__ == "__main__":
-    
-    prjName = sys.argv[1]
-    prjProcFolder = sys.argv[2]
-
+def main(prjName, prjProcFolder, outProjectDir, prjArchiveFolder):
+              
     acpfHUC12 = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    outProjectDir = r"D:\ACPFdevelop\ACPF_OTFly\outgoingDir\%s" %(prjName)
     
-    fCnt = 0 
+    arcpy.AddMessage("")
+    arcpy.AddMessage("Project")
         
     env.workspace = prjProcFolder
     FGDBList = arcpy.ListWorkspaces("acpf*", "FileGDB")
     
-    if arcpy.Exists(outProjectDir):
-        shutil.rmtree(outProjectDir)
-        os.mkdir(outProjectDir)
-    else:
-        os.mkdir(outProjectDir)    
-        
-    fgdbProject(FGDBList, outProjectDir)
+    fgdbProject(FGDBList, acpfHUC12, outProjectDir, prjArchiveFolder)
     
+    env.workspace = ""
+    env.extent = ""    
     del(FGDBList)
+
+            
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
 
 
         

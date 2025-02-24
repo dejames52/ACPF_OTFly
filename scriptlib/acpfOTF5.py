@@ -24,31 +24,30 @@
 # May 2019 - Use a new HUC12 processing feature class (procHUC12_v2019)-- fields are now HUC8, HUC12
 #
 # Jan 2022 - Modify for use in the CA data collection; add entry for CA Bridge
-#
+
 # Import system modules
 import arcpy
 from arcpy import env
 from arcpy import metadata as md
 import sys, string, os, time
 
-env.overwriteOutput = True
-
 # Set extensions & environments 
 arcpy.CheckOutExtension("Spatial")
+env.overwriteOutput = True
 
 
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
-def updMetadata(FGDBList, metaTemp):
+def updMetadata(FileGDB, metaTemp):
 
     # Select & go
     #arcpy.AddMessage(" fgdb: %s" %(FileGDB))
-    env.workspace = FileGDB
+    #env.workspace = FileGDB
     inHUC = os.path.split(FileGDB)[1][4:16]
     
     ## Field Boundaries 
-    #arcpy.AddMessage("---Meta boundaries")
+    arcpy.AddMessage("---Meta boundaries")
     fcList = ['bnd','buf','FB','LU6_','CH_']
     
     for fc in fcList:
@@ -79,7 +78,7 @@ def updMetadata(FGDBList, metaTemp):
     del [slList, src_template, tgt_item]
 
     # Land Use
-    #arcpy.AddMessage("---Meta land use")
+    arcpy.AddMessage("---Meta land use")
     
     luList = ["2016","2017","2018","2019","2020","2021","2022","2023"]
 
@@ -96,19 +95,17 @@ def updMetadata(FGDBList, metaTemp):
 ##------------------------------------------------------------------------------
 ##------------------------------------------------------------------------------
 
-if __name__ == "__main__":
-    
-    inHUC = sys.argv[1]
-    prjProcFolder = sys.argv[2]
+def main(inHUC, prjProcFolder):
 
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"   
     metaTemp = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\Metadata_templates_2023Pro.gdb"
 
-    sws = r"D:\ArcGISDefaults\scratchACPF"
+    sws = r"D:\ACPFdevelop\ACPF_OTFly\scriptlib\scratchACPF"
             
     FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 
-    #arcpy.AddMessage("..." + FileGDB)
+    arcpy.AddMessage("")
+    arcpy.AddMessage("Metadata: " + FileGDB)
 
     env.workspace = FileGDB
     env.extent = "buf" + inHUC
@@ -120,3 +117,9 @@ if __name__ == "__main__":
     env.scratchWorkspace = ""
     arcpy.Delete_management(os.path.join(sws, "mytemp"))
     
+    env.workspace = ""
+    env.extent = ""    
+    
+            
+if __name__ == "__main__":
+    main(sys.argv[1], sys.argv[2])
