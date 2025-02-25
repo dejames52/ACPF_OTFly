@@ -1,16 +1,9 @@
 # ---------------------------------------------------------------------------
-# ACPF\ACPF2017\scriptLib\extractFromTables_ACPF2_gSSURGO.py
-# Created on: 04.2015
+# acpfOTF_wrapper.py -- MAke the calls to individul processing scripts to 
+#  create an ACPF HUC12 FGDB. For use as a geoprocessing service script.
+# Created on: 02.2025
 #   DE James
 #
-#  02/20 - Add IA CornSuitabilityRating field to MUAGGATT collection as IACORNSR
-#  03/21 - Add OCprodIdx, OCprodIdxSrc to MUAGGATT using NCCPIall (*100) field 
-#          populate initially.Follow on to populate with other state-based productivity 
-#          indicies to support the ACPF Financial Analysis tool.
-#  03/21 - Remove all NCCPI subclasses, Corn, Soy, Cotton, Small Grain
-#  01/22 - Add new field in thegSSURGO.VAT, 'gSSURGOversion', to track the version of  
-#          soils data. This field will reference the NRCS declared version using the fiscal 
-#           year in which the data were published. e.g. 2022 for data published in October 2021.
 # ---------------------------------------------------------------------------
 
 # Import modules
@@ -33,9 +26,7 @@ from acpfOTF8 import main as main8
 
 def main(prjName, inHUC12list):
     prjName = sys.argv[1]
-    inHUC12list = list(sys.argv[2].split(';'))
-    #inHUC12list = inHUC12list.replace(" ", "")
-    #print(inHUC12list)
+    inHUC12list = list(sys.argv[2].split(';'))   ## use a ';' seperator due to tool parameter output
 
     processingFolder = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
     prjProcFolder = os.path.join(processingFolder, prjName)
@@ -98,13 +89,13 @@ def main(prjName, inHUC12list):
 
 
     ##########################################################################
-    # Project
+    # Project to local UTM
     main7a(prjName, prjProcFolder, prjOutFolder, prjArchiveFolder)
 
 
     ##########################################################################
     # archive the project folder for download
-    main8(archiveFolder,prjArchiveFolder,prjProcFolder,prjName)    
+    main8(archiveFolder,prjArchiveFolder,prjName)    
     
 
 

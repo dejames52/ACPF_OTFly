@@ -1,6 +1,6 @@
-# ACPF_ArchiveUTMzone.py
-# For each HUC12 fgdb, project all data to a local UTM, place in the utmTemp folder
-#  also, take the projected output and archive in a 7zip format for evenrual download
+# -----------------------------------------------------------------------------
+# acpfOTF7a.py -- Project to local UTM
+# For each HUC12 fgdb, project all data to a local UTM, 
 #
 # May 2019 - Use a new HUC12 processing feature class (procHUC12_v2019)-- fields are now HUC8, HUC12
 # March 2020 - Use a new HUC12 processing feature class (procHUC12_v2020)-- fields are HUC8, HUC12\

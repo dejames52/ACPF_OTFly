@@ -1,13 +1,17 @@
 # ---------------------------------------------------------------------------
-# ACPF\ACPF2017\scriptLib\extractFromTables_ACPF2_gSSURGO.py
-# Created on: 04.2015
-#   DE James
+# acpfOTF3.py -- Soils data
+# Created on: 04.2015  DE James
+#
+# A component of the ACPF On-The-Fly thats extracts the soils data for an 
+#  individual watershed; the gSSURGO 10m rtaster and three soils tables -
+#  SoilsProfile, SurfaceHorizon, and SurfaceTexture
 #
 #  02/20 - Add IA CornSuitabilityRating field to MUAGGATT collection as IACORNSR
 #  03/21 - Add OCprodIdx, OCprodIdxSrc to MUAGGATT using NCCPIall (*100) field 
 #          populate initially.Follow on to populate with other state-based productivity 
 #          indicies to support the ACPF Financial Analysis tool.
 #  03/21 - Remove all NCCPI subclasses, Corn, Soy, Cotton, Small Grain
+#  02/2025: modify to work with ACPF On-The-Fly script set
 # ---------------------------------------------------------------------------
 
 # Import arcpy module

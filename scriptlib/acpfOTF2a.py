@@ -1,45 +1,14 @@
 # -----------------------------------------------------------------------------
-# BULK_KS_Landuse0614.py
+# acpfOTF2a.py -- Land Use 1
 #
-#  Create the tables in the HUC12 FileGDB that contains field-level landuse
-#  information as derived from the NASS Crop Data Layer including the Crop
-#  History table (CH_*) and the Six-year Land Use table (LU6_*)- 2015-2020.
-#  Included are:
-#   - crop rotation string (CropRotatn) using a single letter to represent
-#     each year's majpority crop type..additonally, if the majority is Corn
-#     or soyBean and the majority is LT 75%, check to see if the second
-#     highest class is soyBean or Corn, if true assign as corn/soybean (D)
-#   - crop rotation summary (CropSumry) a string using the single letter
-#     of the majority crop followed by the number of occurances of that ctop
-#     over the rotation span
-#   - a count of the number of occurances of corn-after-corn 'CC' in the
-#     crop rotation string - CCCount
-#   - a count of the number of occurances of the majority crop percent of the
-#     field less than 75% - MixCount
-#   - for each year in the span, the majority crop (majYR) and the percent
-#     of the field that it represents (pctYR)
-#   - a General Land Use assignment based on the 6-yr crop rotation string and
-#     the other derived fields.
+#  Extract a HUC12 watersheds lNASS CDL landuse raster for each of the selected years.
+#   This is a subset of the original bulk processing script for land use and is limited
+#   to the extraction by the buffered boundary feature class, buf<HUC12>. The sister script,
+#   acpfOTF2b.py, adds ACPF attribution, created the by-field crop history (CH) table and
+#   the by-field land use summary table (LU6).
 # -----------------------------------------------------------------------------
 #  Orginal coding: D.James 08/2012
-#    - 07/2013: update to 6-year rotation
-#    - 11/2013: update to extend Pasture to include pasture woodlots; add class
-#        for flood-prone cropland (1 year of Ag field as water)
-#    - 04/2014: updated to ad the full crop history to 2000, table name: CH_inHUC
-#    - 04/2014: made the full commitment to in_memory processing, 
-#        reduce ptroc time by 60%!
-#    - 09/2015: restructure the prograam to include Kansas data; expand rotations
-#        to include wheat and stand-alone soybeans
-#    - 02/2016: 2015 field season will include KS data...as a result
-#       + remove the mixed field assigment for corn/soybeans to 'D'...let it roll
-#       + use a new CDL lookup table - ACPF2015_CDLlkup
-#    - 02/2018: 2017 field season will include 8,000+ watersheds
-#       + move to use the generic land use assignment method, 
-#       + use a new CDL lookup table - ACPF2017_CDLlkup
-#     - 04/2018: add test for updating to new landuse schema or reprocessing to new LU schema
-#     - 12/2021: minor updtes to support processing using puthon 3.x (ArcGIS Pro)
-#       + use a new CDL lookup table - ACPF_CDLlkup_2021 -- moved to all upper case
-#       + used the state-wide CA data for testing; 2,307 HUC12 watersheds
+#  02.2025 - modify to work with ACPF On-The-Fly script set
 # -----------------------------------------------------------------------------
 
 # Import system modules

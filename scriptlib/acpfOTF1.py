@@ -1,21 +1,14 @@
 # ---------------------------------------------------------------------------
-# bld_HUCFB_feature.py
-# Created on: 2012-03-20
-#   DE James
-# Description: Build a HUC12 watershed set of field boundary features based upon a
-# list of Iowa counties that intersect the HUC12 boundary.
-#  - Create an output FGeoDB in the H12_FBlib  070802051002
-#  - Make a list of field boundary feature classes - i.e. FB_19101 -- to match county list
-#  - Extract & assemble intermediate field boundary features that intersect the HUC12 boundary
-#  - Buffer the HUC12 field boundaries to 1km for ancillary data processing
-#  - Finalize the field boundarys:
-#     + eliminate MAJORITY 2009 LU that IS NULL
-#     + eliminate polygons lt 2.5 acres
-#     + remove artifact columns
-#     + add and populate FBndID and Acres fields
+# acpfOTF1.py -- Build the boundaries
+# DE James 02.2025
+# Description: Build an ACPF HUC12 watershed file-geodatabase using traditional ACPF naming, i.e. acpf<HUC12>
+#  - Create an output FGDB in project folder that will eventuall be archived for delivery
+#  - Save the HUC12 boundary, bnd<HUC12>, to the ACPF FGDB
+#  - Extract & assemble field boundary features from the US 48 collection: US48_ACPFfieldBoundaries > FB<HUC12>
+#  - Union the HUC12 BND fc and the FB fc and buffer to 1km > buf<HUC12>
 # ---------------------------------------------------------------------------
 #
-# 09/2015 - Add union of FB & BND to create 1,000m buffer aka buf
+# 02.2025 - modify to work with ACPF On-The-Fly script set
 
 #Import 
 import arcpy
@@ -86,8 +79,6 @@ def main(inHUC, prjProcFolder):
         
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
     FBsrc =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_HUC2_Fields.gdb\US48_ACPFfieldBoundaries"
-    #processingFolder = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
-    #prjProcFolder = os.path.join(processingFolder, prjName)
 
 
     FileGDB = makeOutputDir(prjProcFolder, inHUC)

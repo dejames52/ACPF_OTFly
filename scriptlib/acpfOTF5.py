@@ -1,4 +1,7 @@
-# ACPF_upd_metadata2018.py
+# -----------------------------------------------------------------------------
+# acpfOTF5.py -- Metadata
+#
+# A bit of history here...
 # Metadata handling remains one of ESRI's biggest challenges. We all know it's necessary so
 # why do they make it so hard? A large collection of data requires individual metadata files
 # for each feature class, table, and raster. In this case, 18 different entities. I use a series
@@ -23,7 +26,7 @@
 #
 # May 2019 - Use a new HUC12 processing feature class (procHUC12_v2019)-- fields are now HUC8, HUC12
 #
-# Jan 2022 - Modify for use in the CA data collection; add entry for CA Bridge
+# 2020? - migrate to the metadata module now available in arcpy. I hope the original developers got paid well.
 
 # Import system modules
 import arcpy
