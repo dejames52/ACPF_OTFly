@@ -1,8 +1,9 @@
-# Archive
+# -----------------------------------------------------------------------------
+# acpfOTF8.p-y -- Archive
 import arcpy
 import sys, string, os, time, subprocess
 
-def main(archiveFolder,prjArchiveFolder,prjProcFolder,prjName): 
+def main(archiveFolder,prjArchiveFolder,prjName): 
 
     print("")
     print("Archiving")
@@ -10,7 +11,6 @@ def main(archiveFolder,prjArchiveFolder,prjProcFolder,prjName):
     if os.path.exists(arcName):
         os.remove(arcName)
                       
-    #callStrA = '"C:\\Program Files\\7-Zip\\7z.exe" a %s %s' %(arcName, prjProcFolder)
     callStrA = '"C:\\Program Files\\7-Zip\\7z.exe" a %s %s' %(arcName, prjArchiveFolder)
     procA = subprocess.run(callStrA, shell=True)
     
@@ -24,4 +24,4 @@ def main(archiveFolder,prjArchiveFolder,prjProcFolder,prjName):
     
     
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    main(sys.argv[1], sys.argv[2], sys.argv[3])

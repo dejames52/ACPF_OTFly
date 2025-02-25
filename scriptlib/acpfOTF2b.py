@@ -1,17 +1,15 @@
 # -----------------------------------------------------------------------------
-# updateLU6_newFB.py
+# acpfOTF2b.py -- Land Use 2
 # 
 #  The Update Edited Field Boundaries tool will rebuild the land-use lookup 
 #  tables based on the contents of an edited field boundary feature class, 
 #  using the NASS CDL rasters present in the watershed's file geodatabase.
 #  Included are:
 #   - the CH_<HUC12> table - a summary of NASS CDL data by field for all 
-#     land use raster available in the fiel-geodatabase
+#     land use raster available in the file-geodatabase
 #   - the LU6_<HUC12> table - a 6 year summary of field land use
 #   - crop rotation string (CropRotatn) using a single letter to represent 
-#     each year's majpority crop type..additonally, if the majority is Corn
-#     or soyBean and the majority is LT 75%, check to see if the second
-#     highest class is soyBean or Corn, if true assign as corn/soybean (D)
+#     each year's majpority crop type
 #   - crop rotation summary (Cropsumry) a string using the single letter
 #     of the majority crop followed by the number of occurances of that ctop 
 #     over the rotation span
@@ -42,6 +40,7 @@
 #    - 09/22: Add the use of updateYr as a requied field
 #    - 11/22: Add anonymous OID identification to thwart FSA editing
 #    - 01/2023: Fix updYear format to text(4) from short
+#    - 02/2025: modify to work with ACPF On-The-Fly script set
 # -----------------------------------------------------------------------------
 
 # Import system modules
@@ -141,7 +140,7 @@ def calcMajPct(StatFrame, FileGDB, wsCDL, YrFld, PctFld): ###*** NEW NEW
     # shout out to NNoman@esri.com
     zsMAj = FileGDB + "\\zsMAj"
     zsSum = FileGDB + "\\zsSum"
-    #FB_isAG_Stats = theOutFGDB + "\\FB_isAG_Stats"
+ 
     FBmajority = ZonalStatistics(StatFrame, "FBndID", wsCDL, "MAJORITY", "DATA")
     isMajority = Con(FBmajority == wsCDL, 1)
     
@@ -688,7 +687,6 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
 def main(inHUC, prjProcFolder):
 
     # Input data
-    #acpfDir = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
     CDL_lkup = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\ACPF_CDLlkup_2023"
     HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
     CDLroot = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_LandUse\US_CDL20"
