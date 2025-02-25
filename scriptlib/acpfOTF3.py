@@ -19,6 +19,7 @@ import arcpy
 from arcpy import env
 from arcpy.sa import *
 import sys, os
+from util import get_install_base
 
 # Set extensions & environments 
 arcpy.env.overwriteOutput = True
@@ -113,10 +114,10 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
 ##------------------------------------------------------------------------------
     
 def main(inHUC, prjProcFolder):
-    
-    HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    ACPFsoilRas =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_Soils\US_gSSURGOmosaic.gdb\ua4810m"
-    ACPFsoilDB =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_Soils\US_ACPFsoilsTables.gdb"
+    base = get_install_base()
+    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    ACPFsoilRas =  base + r"\nationalACPF\ACPF_Soils\US_gSSURGOmosaic.gdb\ua4810m"
+    ACPFsoilDB =  base + r"\nationalACPF\ACPF_Soils\US_ACPFsoilsTables.gdb"
 
     env.snapRaster = ACPFsoilRas
     

@@ -14,6 +14,7 @@
 import arcpy
 from arcpy import env
 import sys, os
+from .util import get_install_base
 
 arcpy.env.overwriteOutput = True
 
@@ -76,9 +77,9 @@ def CreateFBfeatures(inHUC, FileGDB):
 
  
 def main(inHUC, prjProcFolder):
-        
-    HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    FBsrc =  r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_HUC2_Fields.gdb\US48_ACPFfieldBoundaries"
+    base = get_install_base()
+    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    FBsrc =  base + r"\nationalACPF\ACPF2023_HUC2_Fields.gdb\US48_ACPFfieldBoundaries"
 
 
     FileGDB = makeOutputDir(prjProcFolder, inHUC)
