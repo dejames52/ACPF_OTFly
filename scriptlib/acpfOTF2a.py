@@ -17,6 +17,7 @@ from arcpy import env
 from arcpy.sa import *
 
 import sys, string, os, time
+from util import get_install_base
 
 # Set extensions & environments
 arcpy.CheckOutExtension("Spatial")
@@ -61,8 +62,9 @@ def AddCDLByYear(CDLroot, inHUC, YrList):
 def main(inHUC, prjProcFolder):
 
     # Input data
-    HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    CDLroot = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_LandUse\US_CDL20"
+    base = get_install_base()
+    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    CDLroot = base + r"\nationalACPF\ACPF_LandUse\US_CDL20"
 
     # Years
     YrList = ["16","17","18","19","20","21","22","23"]

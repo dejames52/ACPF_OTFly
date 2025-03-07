@@ -49,6 +49,7 @@ from arcpy import env
 from arcpy.sa import *
 import collections
 import sys, string, os
+from util import get_install_base
 
 # Set extensions & environments 
 arcpy.CheckOutExtension("Spatial")
@@ -685,11 +686,11 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
 ##------------------------------------------------------------------------------
 
 def main(inHUC, prjProcFolder):
-
+    base = get_install_base()
     # Input data
-    CDL_lkup = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\ACPF_CDLlkup_2023"
-    HUC12status = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    CDLroot = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF_LandUse\US_CDL20"
+    CDL_lkup = base + r"\nationalACPF\ACPF2023_Basedata.gdb\ACPF_CDLlkup_2023"
+    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    CDLroot = base + r"\nationalACPF\ACPF_LandUse\US_CDL20"
     LTthresh = 5
 
     FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"

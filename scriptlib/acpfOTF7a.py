@@ -12,6 +12,7 @@ from arcpy import env
 from arcpy.sa import *
 import sys, string, os, time, shutil
 from datetime import datetime
+from util import get_install_base
 
 # Set extensions & environments 
 arcpy.CheckOutExtension("Spatial")
@@ -83,8 +84,8 @@ def fgdbProject(FGDBList, acpfHUC12, outProjectDir, prjArchiveFolder):
 ##------------------------------------------------------------------------------
 
 def main(prjName, prjProcFolder, outProjectDir, prjArchiveFolder):
-              
-    acpfHUC12 = r"D:\ACPFdevelop\ACPF_OTFly\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    base = get_install_base()
+    acpfHUC12 = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
     
     arcpy.AddMessage("")
     arcpy.AddMessage("Project")

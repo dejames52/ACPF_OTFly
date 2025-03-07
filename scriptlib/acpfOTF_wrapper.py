@@ -18,6 +18,7 @@ from acpfOTF3 import main as main3
 from acpfOTF5 import main as main5
 from acpfOTF7a import main as main7a
 from acpfOTF8 import main as main8
+from util import get_install_base
 
 # Local
 
@@ -25,10 +26,11 @@ from acpfOTF8 import main as main8
 ##------------------------------------------------------------------------------
 
 def main(prjName, inHUC12list):
+    base = get_install_base()
     prjName = sys.argv[1]
     inHUC12list = list(sys.argv[2].split(';'))   ## use a ';' seperator due to tool parameter output
 
-    processingFolder = r"D:\ACPFdevelop\ACPF_OTFly\processingDir"
+    processingFolder = base + r"\processingDir"
     prjProcFolder = os.path.join(processingFolder, prjName)
 
     if arcpy.Exists(prjProcFolder):
@@ -37,7 +39,7 @@ def main(prjName, inHUC12list):
     else:
         os.mkdir(prjProcFolder)    
     
-    outgoingFolder = r"D:\ACPFdevelop\ACPF_OTFly\outgoingDir"
+    outgoingFolder = base + r"\outgoingDir"
     prjOutFolder = os.path.join(outgoingFolder, prjName)
     
     if arcpy.Exists(prjOutFolder):
@@ -46,7 +48,7 @@ def main(prjName, inHUC12list):
     else:
         os.mkdir(prjOutFolder)    
     
-    archiveFolder = r"D:\ACPFdevelop\ACPF_OTFly\archiveDir"
+    archiveFolder = base + r"\archiveDir"
     prjArchiveFolder = os.path.join(archiveFolder, prjName)
 
     if arcpy.Exists(prjArchiveFolder):
