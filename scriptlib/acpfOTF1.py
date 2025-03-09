@@ -78,9 +78,8 @@ def CreateFBfeatures(inHUC, FileGDB):
  
 def main(inHUC, prjProcFolder):
     base = get_install_base()
-    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
-    FBsrc =  base + r"\nationalACPF\ACPF2023_HUC2_Fields.gdb\US48_ACPFfieldBoundaries"
-
+    HUC12status = base + r"\nationalACPF\ACPF_Basedata.gdb\US48_HUC12_2023"
+    FBsrc =  base + r"\nationalACPF\ACPF_HUC2_Fields.gdb\US48_ACPFfieldBoundaries"
 
     FileGDB = makeOutputDir(prjProcFolder, inHUC)
     env.workspace = FileGDB

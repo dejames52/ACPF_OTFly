@@ -101,8 +101,8 @@ def updMetadata(FileGDB, metaTemp):
 
 def main(inHUC, prjProcFolder):
     base = get_install_base()
-    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"   
-    metaTemp = base + r"\nationalACPF\Metadata_templates_2023Pro.gdb"
+    HUC12status = base + r"\nationalACPF\ACPF_Basedata.gdb\US48_HUC12_2023"   
+    metaTemp = base + r"\nationalACPF\ACPFOTF_Metadata_templates.gdb"
 
     sws = base + r"\scriptlib\scratchACPF"
             

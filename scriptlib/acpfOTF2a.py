@@ -25,6 +25,7 @@ env.overwriteOutput = True
 
 #----------------------------------------------------------------------------------------------
 # Remove early CDL data to trim to 8 years as core - 7/2024
+# Add 2024, remove 2016??
 
 def DeleteCDLByYear(YrDelete):
     # Process the new framework through each year
@@ -63,11 +64,11 @@ def main(inHUC, prjProcFolder):
 
     # Input data
     base = get_install_base()
-    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    HUC12status = base + r"\nationalACPF\ACPF_Basedata.gdb\US48_HUC12_2023"
     CDLroot = base + r"\nationalACPF\ACPF_LandUse\US_CDL20"
 
     # Years
-    YrList = ["16","17","18","19","20","21","22","23"]
+    YrList = ["17","18","19","20","21","22","23","24"]
     
     FileGDB = prjProcFolder + "\\acpf" + inHUC + ".gdb"
 

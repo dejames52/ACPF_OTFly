@@ -42,7 +42,7 @@ def ext_gSSURGO(inHUC, ACPFsoilRas, FileGDB):
     arcpy.CalculateField_management(gSSRUGOByMask, "mukey", '!VALUE!', "PYTHON_9.3")
 
     arcpy.BuildPyramids_management(gSSRUGOByMask)
-    arcpy.AddIndex_management(gSSRUGOByMask, "mukey", "muIdx", "UNIQUE", "NON_ASCENDING")
+    #arcpy.AddIndex_management(gSSRUGOByMask, "mukey", "muIdx", "UNIQUE", "NON_ASCENDING")
     
     muRows = "HUC12MUROWS"
     arcpy.CopyRows_management(gSSRUGOByMask, muRows)
@@ -64,7 +64,7 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.TableToTable_conversion(muRows, FileGDB, "SoilProfile%s" % inHUC)
     arcpy.JoinField_management("SoilProfile%s" %(inHUC), "mukey", SoilPROFTable, "mukey", profileList) 
     arcpy.DeleteField_management("SoilProfile%s" %(inHUC), ["Value", "Count","gSSURGOversion"] )
-    arcpy.AddIndex_management("SoilProfile%s" %(inHUC), "mukey", "muIdx", "UNIQUE", "NON_ASCENDING")
+    #arcpy.AddIndex_management("SoilProfile%s" %(inHUC), "mukey", "muIdx", "UNIQUE", "NON_ASCENDING")
 
     
     ## ------------- Surface Horizon  -------------
@@ -77,7 +77,7 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.TableToTable_conversion(muRows, FileGDB,"SurfHrz%s" %( inHUC))
     arcpy.JoinField_management("SurfHrz%s"  %(inHUC), "mukey", SurfHorizonTable, "mukey", HrzList) 
     arcpy.DeleteField_management("SurfHrz%s"  %(inHUC), ["Value", "Count","gSSURGOversion"]) 
-    arcpy.AddIndex_management("SurfHrz%s" %(inHUC), ["mukey","cokey"], "muIdx", "UNIQUE", "NON_ASCENDING")
+    #arcpy.AddIndex_management("SurfHrz%s" %(inHUC), ["mukey","cokey"], "muIdx", "UNIQUE", "NON_ASCENDING")
       
     
     ## ------------- Surface Texture  ------------- 
@@ -91,7 +91,7 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     arcpy.JoinField_management("SurfTex%s" %(inHUC), "mukey", SurfHorizonTable, "mukey", ["cokey"]) 
     arcpy.JoinField_management("SurfTex%s" %(inHUC), "cokey", SurfTextureTable, "cokey", TexList) 
     arcpy.DeleteField_management("SurfTex%s" %(inHUC), ["Value", "Count", "mukey","gSSURGOversion"]) 
-    arcpy.AddIndex_management("SurfTex%s" %(inHUC), "cokey", "coIdx", "UNIQUE", "NON_ASCENDING")
+    #arcpy.AddIndex_management("SurfTex%s" %(inHUC), "cokey", "coIdx", "UNIQUE", "NON_ASCENDING")
     
 
     ## ------------- MUAgg  ------------- 
@@ -115,7 +115,7 @@ def makeACPFsoilsTables(ACPFsoilDB, muRows, FileGDB,inHUC):
     
 def main(inHUC, prjProcFolder):
     base = get_install_base()
-    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    HUC12status = base + r"\nationalACPF\ACPF_Basedata.gdb\US48_HUC12_2023"
     ACPFsoilRas =  base + r"\nationalACPF\ACPF_Soils\US_gSSURGOmosaic.gdb\ua4810m"
     ACPFsoilDB =  base + r"\nationalACPF\ACPF_Soils\US_ACPFsoilsTables.gdb"
 

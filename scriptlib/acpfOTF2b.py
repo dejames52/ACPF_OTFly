@@ -674,9 +674,9 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
     arcpy.DeleteField_management(FBedit, YrfldList)
     arcpy.DeleteField_management(LU_table, YrfldList)
     
-    arcpy.management.AddIndex(FBedit, "FBndID", "FBidx")
-    arcpy.management.AddIndex(LU_table, "FBndID", "FBidx")
-    arcpy.management.AddIndex(CH_table, "FBndID", "FBidx")
+    #arcpy.management.AddIndex(FBedit, "FBndID", "FBidx")
+    #arcpy.management.AddIndex(LU_table, "FBndID", "FBidx")
+    #arcpy.management.AddIndex(CH_table, "FBndID", "FBidx")
     
     arcpy.Delete_management(StatFrame)
     del (LU_table,CH_table,YrfldList, FB_delfldList, CH_delfldList)
@@ -688,8 +688,8 @@ def mkOutputs(StatFrame, FileGDB, inHUC, YrList, FBedit):
 def main(inHUC, prjProcFolder):
     base = get_install_base()
     # Input data
-    CDL_lkup = base + r"\nationalACPF\ACPF2023_Basedata.gdb\ACPF_CDLlkup_2023"
-    HUC12status = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    CDL_lkup = base + r"\nationalACPF\ACPF_Basedata.gdb\ACPF_CDLlkup_2023"
+    HUC12status = base + r"\nationalACPF\ACPF_Basedata.gdb\US48_HUC12_2023"
     CDLroot = base + r"\nationalACPF\ACPF_LandUse\US_CDL20"
     LTthresh = 5
 

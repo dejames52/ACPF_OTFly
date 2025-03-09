@@ -45,8 +45,7 @@ def fgdbProject(FGDBList, acpfHUC12, outProjectDir, prjArchiveFolder):
         outFGDB = os.path.join(outProjectDir, newFGDB)
 
         #------------------------------------------------------------
-        print("Projecting %s... " %(FileGDB))
-        env.workspace = FileGDB
+        arcpy.AddMessage("Projecting %s... " %(FileGDB))
 
         FeatureList = arcpy.ListFeatureClasses()
         RasterList = arcpy.ListRasters()
@@ -67,13 +66,32 @@ def fgdbProject(FGDBList, acpfHUC12, outProjectDir, prjArchiveFolder):
         for tab in TableList:
             arcpy.TableToTable_conversion(tab, outFGDB, tab)
 
-        
         #----------------
-        # Cleanup
+        # Final
         arcpy.management.Compact(outFGDB)
         
-        env.workspace = outProjectDir
         arcpy.Copy_management(outFGDB,os.path.join(prjArchiveFolder,newFGDB))
+
+        # add final indicies to the files in the outFGDB
+        env.workspace = newFGDB
+        arcpy.AddMessage(newFGDB)
+        theFB = "FB%s" % inHUC
+        LU_table = "LU6_%s" % inHUC
+        CH_table = "CH_%s" % inHUC
+        arcpy.management.AddIndex(theFB, "FBndID", "FBidx")
+        arcpy.management.AddIndex(LU_table, "FBndID", "FBidx")
+        arcpy.management.AddIndex(CH_table, "FBndID", "FBidx")
+        
+        soilsRas = "gSSURGO"
+        sProf = "SoilProfile%s" % inHUC
+        sHrz = "SurfHrz%s" % inHUC
+        sTex = "SurfTex%s" % inHUC
+        arcpy.management.AddIndex(soilsRas, "mukey", "muIdx")
+        arcpy.management.AddIndex(sProf, "mukey", "muIdx")
+        arcpy.management.AddIndex(sHrz, ["mukey","cokey"], "muIdx")
+        arcpy.management.AddIndex(sTex, "cokey", "coIdx")
+
+        
 
         del (FeatureList, RasterList, TableList, outSR)
         env.workspace = ""
@@ -85,10 +103,10 @@ def fgdbProject(FGDBList, acpfHUC12, outProjectDir, prjArchiveFolder):
 
 def main(prjName, prjProcFolder, outProjectDir, prjArchiveFolder):
     base = get_install_base()
-    acpfHUC12 = base + r"\nationalACPF\ACPF2023_Basedata.gdb\US48_HUC12_2023"
+    acpfHUC12 = base + r"\nationalACPF\ACPF_Basedata.gdb\US48_HUC12_2023"
     
     arcpy.AddMessage("")
-    arcpy.AddMessage("Project")
+    arcpy.AddMessage("ProjectING...")
         
     env.workspace = prjProcFolder
     FGDBList = arcpy.ListWorkspaces("acpf*", "FileGDB")
